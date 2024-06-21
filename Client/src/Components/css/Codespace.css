@@ -1,0 +1,14 @@
+.code__input{
+  width: 70%;
+  height: 72vh;
+  margin: auto auto;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+  display: block;
+}
+
+.submit__button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
