@@ -3,9 +3,11 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import "./css/Codespace.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Codespace() {
   const [code, setCode] = useState("");
+  const navigate = useNavigate();
 
   function submitCodeChange(event) {
     setCode(event.target.value);
@@ -16,17 +18,18 @@ function Codespace() {
     body.code = code;
     body.language="java";
     body.problemId="1";
-    body.userId="1"
+    body.userId="1";
+    let submissionId = "";
     // console.log(body);
     axios.post("http://localhost:8080/judge/submit",body)
         .then((res)=>{
-            console.log(res.data);
-            alert(res.data);
+          submissionId = res.data;
         })
         .catch((error) => {
             console.log(error);
             alert("Error check log");
         });
+    navigate('/submission/'+submissionId);
   }
 
   return (

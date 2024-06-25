@@ -1,0 +1,10 @@
+.question{
+    display: flex;
+    margin: auto auto;
+    max-width: 1000px;
+    width: 95%;
+    margin-top: 3rem;
+    background-color: grey;
+    border-radius: 1rem;
+    padding: 1rem 1rem;
+}

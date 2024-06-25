@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import java.sql.Timestamp;
 
@@ -27,4 +28,8 @@ public class Problem {
     private long problemId;
     @Column(name = "At")
     private Timestamp timeStamp;
+    @Column(
+            length = 500
+    )
+    private String name;
 }

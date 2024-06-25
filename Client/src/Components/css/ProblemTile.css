@@ -1,0 +1,10 @@
+.problemTile{
+    display: flex;
+    min-width: 15rem;
+    justify-content: space-evenly;
+    background-color: grey;
+    max-width: 80%;
+    margin: auto auto;
+    height: fit-content;
+    margin-top: 2.5rem;
+}

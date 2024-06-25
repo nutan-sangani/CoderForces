@@ -41,7 +41,7 @@ public class JudgeServiceImpl implements JudgeService {
             long submissionId = databaseService.createSubmissionAndSave(code);
             s3FileOperationsService.saveToFile(code.getCode(),"submission/"+submissionId+".txt");
             sqsService.addToQueue(String.valueOf(submissionId),sqsUrl);
-            return "Added to queue";
+            return String.valueOf(submissionId);
         }
         catch (Exception e){
             return e.getMessage();
@@ -59,6 +59,7 @@ public class JudgeServiceImpl implements JudgeService {
         dockerService.removeContainer(containerId);
         dockerService.removeImage(imageId);
 
+        System.out.println(output);
         return output;
     }
 

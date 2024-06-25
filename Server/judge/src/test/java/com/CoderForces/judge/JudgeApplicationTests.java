@@ -29,7 +29,8 @@ class JudgeApplicationTests {
 	@Test
 	void saveProblem(){
 		Problem problem = Problem.builder()
-				.problemId(4)
+				.problemId(Long.MAX_VALUE)
+				.name("Two Sum")
 				.timeStamp(Timestamp.valueOf(LocalDateTime.now()))
 				.build();
 
