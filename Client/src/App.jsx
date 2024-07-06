@@ -5,7 +5,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import './index.css';
 import AllProblems from './Pages/AllProblems';
 import Problem from './Pages/Problem';
-
+import SubmissionPage from './Pages/SubmissionPage';
 
 function App() {
 

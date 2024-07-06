@@ -1,0 +1,7 @@
+.submissionTable{
+    width: 80%;
+    max-width: 1000px;
+    min-width: 200px;
+    margin: 10rem auto;
+    border: 2px solid black;
+}
