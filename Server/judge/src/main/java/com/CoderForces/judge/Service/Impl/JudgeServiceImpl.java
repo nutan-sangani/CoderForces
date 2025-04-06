@@ -1,19 +1,17 @@
 package com.CoderForces.judge.Service.Impl;
 
 import com.CoderForces.judge.Model.InputCode;
+import com.CoderForces.judge.Repository.CloudDataStoreRepository;
+import com.CoderForces.judge.Repository.LocalFileOperationsRepository;
 import com.CoderForces.judge.Service.*;
 import com.CoderForces.judge.Util.FilePathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class JudgeServiceImpl implements JudgeService {
-    @Autowired
-    FileOperationsService fileOperationsService;
-
     @Autowired
     S3FileOperationsService s3FileOperationsService;
 
@@ -32,6 +30,12 @@ public class JudgeServiceImpl implements JudgeService {
     @Autowired
     FilePathUtil filePathUtil;
 
+    @Autowired
+    LocalFileOperationsRepository localFileOperationsRepository;
+
+    @Autowired
+    CloudDataStoreRepository cloudDataStoreRepository;
+
     @Value("${aws.sqs.url}")
     String sqsUrl;
 
@@ -39,7 +43,8 @@ public class JudgeServiceImpl implements JudgeService {
         try{
             code.setCode(code.getCode().replace('`','"'));
             long submissionId = databaseService.createSubmissionAndSave(code);
-            s3FileOperationsService.saveToFile(code.getCode(),"submission/"+submissionId+".txt");
+//            s3FileOperationsService.saveToFile(code.getCode(),"submission/"+submissionId+".txt");
+            cloudDataStoreRepository.write(code.getCode(),"submission/"+submissionId+".txt");
             sqsService.addToQueue(String.valueOf(submissionId),sqsUrl);
             return String.valueOf(submissionId);
         }
@@ -65,15 +70,18 @@ public class JudgeServiceImpl implements JudgeService {
 
     @Override
     public String runCode(long problemId,long submissionId,String submissionLanguage){
-        String submissionCode = s3FileOperationsService.readFromFile("submission/"+submissionId+".txt");
-
         String submissionCodeFilePath = filePathUtil.getFilePath("submissionCodeFile");
-        fileOperationsService.saveToFile(submissionCode,submissionCodeFilePath);
-
-        String problemInput = s3FileOperationsService.readFromFile("problem/input/"+problemId+".txt");
-
+        boolean done = cloudDataStoreRepository.readAndSaveToLocal("submission/"+submissionId+".txt",submissionCodeFilePath);
+        if(!done){
+            //TODO retry logic
+            return "file operation error";
+        }
         String problemInputFilePath = filePathUtil.getFilePath("problemInputFile");
-        fileOperationsService.saveToFile(problemInput,problemInputFilePath);
+        done = cloudDataStoreRepository.readAndSaveToLocal("problem/input/"+problemId+".txt",problemInputFilePath);
+        if(!done){
+            //TODO retry logic
+            return "file operation error";
+        }
 
         String output = executeCodeAndGetOutput(submissionLanguage);
 

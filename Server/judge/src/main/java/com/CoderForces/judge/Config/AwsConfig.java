@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
@@ -14,10 +15,6 @@ import software.amazon.awssdk.services.sqs.SqsClient;
 
 @Configuration
 public class AwsConfig {
-
-    @Autowired
-    public Environment environment;
-
     @Value("${aws.accessKey}")
     private String accessKey;
 
@@ -32,19 +29,26 @@ public class AwsConfig {
     }
 
     @Bean
-    public S3Client getS3Client(){
-        AwsBasicCredentials awsCredentials = getAwsCredentials();
+    @Scope("singleton")
+    public StaticCredentialsProvider cloudCredentialProvider(){
+        AwsBasicCredentials credentials = getAwsCredentials();
+        return StaticCredentialsProvider.create(credentials);
+    }
+
+    @Bean
+    @Scope("singleton")
+    public S3Client getS3Client(StaticCredentialsProvider credentialsProvider){
         return S3Client.builder()
-                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
+                .credentialsProvider(credentialsProvider)
                 .region(Region.AP_SOUTH_1)
                 .build();
     }
 
     @Bean
-    public SqsClient getSqsClient(){
-        AwsBasicCredentials awsBasicCredentials = getAwsCredentials();
+    @Scope("singleton")
+    public SqsClient getSqsClient(StaticCredentialsProvider credentialsProvider){
         return SqsClient.builder()
-                .credentialsProvider(StaticCredentialsProvider.create(awsBasicCredentials))
+                .credentialsProvider(credentialsProvider)
                 .region(Region.AP_SOUTH_1)
                 .build();
     }

@@ -30,7 +30,7 @@ public class WorkerServiceImpl {
     @Value("${aws.sqs.url}")
     String sqsUrl;
 
-//    @Scheduled(fixedDelay = 500)
+    @Scheduled(fixedDelay = 500)
     public void processQueue(){
         List<Message> messages = sqsService.getFromQueue(sqsUrl);
         System.out.println("worker running");

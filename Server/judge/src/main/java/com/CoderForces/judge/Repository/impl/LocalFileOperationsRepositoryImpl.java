@@ -1,30 +1,30 @@
-package com.CoderForces.judge.Service.Impl;
+package com.CoderForces.judge.Repository.impl;
 
-import com.CoderForces.judge.Model.InputCode;
-import com.CoderForces.judge.Service.FileOperationsService;
-import org.springframework.stereotype.Service;
+import com.CoderForces.judge.Repository.LocalFileOperationsRepository;
+import org.springframework.stereotype.Repository;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-public class FileOperationsServiceImpl implements FileOperationsService{
-    //a probable bottleneck is the no of file descriptors available in linux, but since rated limited
-    //it is not a problem.
-    @Override
-    public void saveToFile(String code, String filePath) {
+@Repository
+public class LocalFileOperationsRepositoryImpl implements LocalFileOperationsRepository {
+    public boolean write(String dataToBeWritten, String filePath) {
         //buffered writer since large files likhne pad sakte h.
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))){
-            writer.write(code);
+            writer.write(dataToBeWritten);
+            return true;
         }
         catch(Exception e){
             System.out.println(e.getMessage());
+            return false;
         }
     }
 
-    @Override
-    public List<String> readFromFile(String filePath){
+    public List<String> read(String filePath){
         List<String> fileContent = new ArrayList<>();
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))){
             String line;
@@ -37,5 +37,4 @@ public class FileOperationsServiceImpl implements FileOperationsService{
         }
         return fileContent;
     }
-
 }

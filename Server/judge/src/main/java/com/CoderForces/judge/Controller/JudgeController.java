@@ -19,6 +19,7 @@ public class JudgeController {
 
     @PostMapping("/submit")
     public ResponseEntity<String> submitCode(@RequestBody InputCode code){
+//        System.out.println("came here");
         String status = judgeService.sendCodeRunRequest(code);
         return new ResponseEntity<String>(status,HttpStatus.OK);
     }
