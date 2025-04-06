@@ -9,6 +9,7 @@ import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.Frame;
+import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.WaitResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,7 +62,18 @@ public class DockerServiceImpl implements DockerService {
 
     @Override
     public void startContainer(String containerId) {
+        HostConfig hostConfig = new HostConfig();
         dockerClient.startContainerCmd(containerId).exec();
+
+        Thread timeoutMonitorThread = new Thread(() -> {
+            try{
+                Thread.sleep(2*1000);
+
+            }
+            catch(Exception e){
+                System.out.println(e);
+            }
+        });
         CountDownLatch latch = new CountDownLatch(1);
         try{
             ResultCallback<WaitResponse> waitCallBack = dockerConfig.waitCallBack(latch);
