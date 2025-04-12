@@ -64,7 +64,7 @@ public class JudgeServiceImpl implements JudgeService {
         dockerService.removeContainer(containerId);
         dockerService.removeImage(imageId);
 
-        System.out.println(output);
+//        System.out.println(output);
         return output;
     }
 

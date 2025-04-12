@@ -24,6 +24,8 @@ function Codespace() {
     axios.post("http://localhost:8080/judge/submit",body)
         .then((res)=>{
           submissionId = res.data;
+          console.log(submissionId);
+          navigate('/submission/'+submissionId);
         })
         .catch((error) => {
             console.log(error);

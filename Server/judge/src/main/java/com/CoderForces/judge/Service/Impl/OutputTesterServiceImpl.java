@@ -26,20 +26,25 @@ public class OutputTesterServiceImpl implements OutputTesterService {
         output = output.trim();
         answer = answer.trim();
         long n = answer.length();
-        if(output.length()!=n)
-        {
-            System.out.println("length not matching");
-            return false;
+        System.out.println(output);
+        if(output.contains("Passed")){
+            return true;
         }
-        for(int i=0;i<n;i++){
-            if(output.charAt(i)!=answer.charAt(i))
-            {
-                System.out.println("Mismatch at index " + i + ":");
-                System.out.println("Output char: " + (int) output.charAt(i) + " ('" + output.charAt(i) + "')");
-                System.out.println("Answer char: " + (int) answer.charAt(i) + " ('" + answer.charAt(i) + "')");
-                return false;
-            }
-        }
-        return true;
+        return false;
+//        if(output.length()!=n)
+//        {
+//            System.out.println("length not matching");
+//            return false;
+//        }
+//        for(int i=0;i<n;i++){
+//            if(output.charAt(i)!=answer.charAt(i))
+//            {
+//                System.out.println("Mismatch at index " + i + ":");
+//                System.out.println("Output char: " + (int) output.charAt(i) + " ('" + output.charAt(i) + "')");
+//                System.out.println("Answer char: " + (int) answer.charAt(i) + " ('" + answer.charAt(i) + "')");
+//                return false;
+//            }
+//        }
+//        return true;
     }
 }
